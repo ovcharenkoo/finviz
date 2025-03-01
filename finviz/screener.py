@@ -413,13 +413,13 @@ class Screener(object):
     def __get_table_headers(self):
         """ Private function used to return table headers. """
         headers = []
-
-        header_elements = self._page_content.cssselect('tr[valign="middle"]')[0].xpath("td")
+        
+        # Find all th elements with class="table-header" inside thead
+        header_elements = self._page_content.cssselect('thead th.table-header')
         
         for header_element in header_elements:
-            # Use normalize-space to extract text content while ignoring internal elements
-            header_text = header_element.xpath("normalize-space()")
-            
+            # Get text content, ignoring any child elements (like SVG icons)
+            header_text = header_element.xpath("text()")[0].strip() if header_element.xpath("text()") else ""
             if header_text:
                 headers.append(header_text)
         
